@@ -1,35 +1,28 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import Hero from '../pages/hero';
 
-const MovieList = ({ selectedCategory }) => {
+const MovieList = ({ selectedCategory, searchQuery }) => {
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [genres, setGenres] = useState([]);
-  const [selectedGenre, setSelectedGenre] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
 
   const apiKey = 'aebbe945a2b55aac48b2646bce30b705';
 
   useEffect(() => {
-    axios.get(`https://api.themoviedb.org/3/genre/movie/list?api_key=${apiKey}&language=en-US`)
-      .then(response => {
-        setGenres(response.data.genres);
-      })
-      .catch(error => {
-        setError('Failed to fetch genres');
-      });
-  }, []);
+    if (selectedCategory === 'Home') {
+      setLoading(false); 
+    } else {
+      fetchMovies(selectedCategory, currentPage, searchQuery);
+    }
+  }, [selectedCategory, currentPage, searchQuery]);
 
-  useEffect(() => {
-    fetchMovies();
-  }, [selectedCategory]);
-
-  const fetchMovies = (category = '', page = 1) => {
+  const fetchMovies = (category, page, query) => {
     setLoading(true);
-    let apiUrl = `https://api.themoviedb.org/3/movie/popular?api_key=${apiKey}&language=en-US&page=${page}`;
+    let apiUrl = '';
 
-    // Change URL based on category
+    // Menentukan URL API berdasarkan kategori yang dipilih
     if (category === 'Movies') {
       apiUrl = `https://api.themoviedb.org/3/movie/popular?api_key=${apiKey}&language=en-US&page=${page}`;
     } else if (category === 'Drama') {
@@ -40,6 +33,9 @@ const MovieList = ({ selectedCategory }) => {
       apiUrl = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&with_genres=10770&language=en-US&page=${page}`;
     } else if (category === 'TV Show') {
       apiUrl = `https://api.themoviedb.org/3/tv/popular?api_key=${apiKey}&language=en-US&page=${page}`;
+    } else if (query) {
+      // Jika ada query pencarian, kita gunakan API pencarian
+      apiUrl = `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${query}&language=en-US&page=${page}`;
     }
 
     axios.get(apiUrl)
@@ -55,7 +51,6 @@ const MovieList = ({ selectedCategory }) => {
 
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
-    fetchMovies(selectedCategory, newPage);
   };
 
   if (loading) {
@@ -67,11 +62,15 @@ const MovieList = ({ selectedCategory }) => {
   }
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-4xl font-bold mb-6">{selectedCategory} </h1>
+    <div className="bg-black">
+      {selectedCategory === 'Home' ? (
+        <Hero />  
+      ) : (
+        <h1 className="text-4xl font-bold mb-6">{selectedCategory}</h1>
+      )}
 
       {/* Daftar Film */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+      <div className="container mx-auto p-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
         {movies.map((movie) => (
           <div
             key={movie.id}

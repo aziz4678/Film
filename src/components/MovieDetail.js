@@ -6,7 +6,7 @@ const MovieDetail = ({ movieId, onClose }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const apiKey = 'aebbe945a2b55aac48b2646bce30b705'; // Ganti dengan API key Anda
+  const apiKey = 'aebbe945a2b55aac48b2646bce30b705'; 
 
   useEffect(() => {
     const fetchMovieDetails = () => {

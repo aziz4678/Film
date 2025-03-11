@@ -1,7 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 
-const Header = ({ onCategorySelect }) => {
-  const categories = ['Home', 'Movies',  'Drama', 'Horor', 'TV Movie',  'TV Show'];
+const Header = ({ onCategorySelect, onSearch }) => {
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const categories = ['Home', 'Movies', 'Drama', 'Horor', 'TV Movie', 'TV Show'];
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    onSearch(searchQuery); // Kirimkan query pencarian ke MovieList
+  };
 
   return (
     <div className="bg-black text-white p-4">
@@ -12,18 +19,25 @@ const Header = ({ onCategorySelect }) => {
             <button
               key={index}
               className="hover:text-gray-300"
-              onClick={() => onCategorySelect(category)}
+              onClick={() => onCategorySelect(category)} // Kirimkan kategori yang dipilih ke MovieList
             >
               {category}
             </button>
           ))}
         </div>
         <div>
-          <input
-            type="text"
-            placeholder="Search anything..."
-            className="p-2 rounded-md border border-gray-600"
-          />
+          <form onSubmit={handleSearch} className="flex items-center">
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="p-2 rounded-md border border-gray-600 text-black"
+              placeholder="Search anything..."
+            />
+            <button type="submit" className="ml-2 bg-blue-500 text-white p-2 rounded-md">
+              Search
+            </button>
+          </form>
         </div>
       </div>
     </div>
