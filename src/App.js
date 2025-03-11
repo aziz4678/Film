@@ -1,20 +1,12 @@
-import React, { useState } from 'react';
-import Header from './components/Header';
+import React from 'react';
 import MovieList from './components/MovieList';
 
-const App = () => {
-  const [selectedCategory, setSelectedCategory] = useState('Home');
-
-  const handleCategorySelect = (category) => {
-    setSelectedCategory(category);
-  };
-
+function App() {
   return (
-    <div>
-      <Header onCategorySelect={handleCategorySelect} />
-      <MovieList selectedCategory={selectedCategory} />
+    <div className="App">
+      <MovieList />
     </div>
   );
-};
+}
 
 export default App;
