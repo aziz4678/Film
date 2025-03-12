@@ -1,18 +1,17 @@
 import React, { useState } from 'react';
 import { IconButton } from '@mui/material';
-import { ArrowBackIos, ArrowForwardIos } from '@mui/icons-material'; // Material UI icons
+import { ArrowBackIos, ArrowForwardIos } from '@mui/icons-material'; 
 
 const Hero = ({ movies }) => {
-  const [currentHeroIndex, setCurrentHeroIndex] = useState(0);  // State untuk menyimpan indeks film yang ditampilkan
-
-  const movie = movies[currentHeroIndex]; // Ambil film berdasarkan indeks saat ini
+  const [currentHeroIndex, setCurrentHeroIndex] = useState(0);  
+  const movie = movies[currentHeroIndex]; 
 
   const nextMovie = () => {
-    setCurrentHeroIndex((prevIndex) => (prevIndex + 1) % movies.length); // Pindah ke film berikutnya
+    setCurrentHeroIndex((prevIndex) => (prevIndex + 1) % movies.length); 
   };
 
   const prevMovie = () => {
-    setCurrentHeroIndex((prevIndex) => (prevIndex - 1 + movies.length) % movies.length); // Pindah ke film sebelumnya
+    setCurrentHeroIndex((prevIndex) => (prevIndex - 1 + movies.length) % movies.length);
   };
 
   return (
