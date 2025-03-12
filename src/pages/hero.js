@@ -1,7 +1,19 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { IconButton } from '@mui/material';
+import { ArrowBackIos, ArrowForwardIos } from '@mui/icons-material'; // Material UI icons
 
 const Hero = ({ movies }) => {
-  const movie = movies[0]; 
+  const [currentHeroIndex, setCurrentHeroIndex] = useState(0);  // State untuk menyimpan indeks film yang ditampilkan
+
+  const movie = movies[currentHeroIndex]; // Ambil film berdasarkan indeks saat ini
+
+  const nextMovie = () => {
+    setCurrentHeroIndex((prevIndex) => (prevIndex + 1) % movies.length); // Pindah ke film berikutnya
+  };
+
+  const prevMovie = () => {
+    setCurrentHeroIndex((prevIndex) => (prevIndex - 1 + movies.length) % movies.length); // Pindah ke film sebelumnya
+  };
 
   return (
     <div className="relative w-full h-screen">
@@ -30,6 +42,34 @@ const Hero = ({ movies }) => {
                   Watch Now
                 </button>
               </div>
+            </div>
+
+            {/* Navigasi Film */}
+            <div className="absolute top-1/2 left-4 transform -translate-y-1/2"> 
+              <IconButton
+                onClick={prevMovie}
+                color="primary"
+                aria-label="previous movie"
+                style={{
+                  backgroundColor: 'rgba(0, 0, 0, 0.6)',
+                  borderRadius: '50%',
+                }}
+              >
+                <ArrowBackIos style={{ color: 'white', transform: 'translateX(5px)' }} />
+              </IconButton>
+            </div>
+            <div className="absolute top-1/2 right-4 transform -translate-y-1/2">
+              <IconButton
+                onClick={nextMovie}
+                color="primary"
+                aria-label="next movie"
+                style={{
+                  backgroundColor: 'rgba(0, 0, 0, 0.6)',
+                  borderRadius: '50%',
+                }}
+              >
+                <ArrowForwardIos style={{ color: 'white' }} />
+              </IconButton>
             </div>
           </div>
         </>

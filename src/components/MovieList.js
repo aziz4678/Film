@@ -4,23 +4,20 @@ import Hero from '../pages/hero';
 
 const MovieList = ({ selectedCategory, searchQuery, onMovieClick }) => {
   const [movies, setMovies] = useState([]);
-  const [heroMovies, setHeroMovies] = useState([]); // Movies for Hero section
+  const [heroMovies, setHeroMovies] = useState([]); 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
 
   const apiKey = 'aebbe945a2b55aac48b2646bce30b705';
 
-  // Fetch Hero and Movies when selectedCategory or searchQuery changes
   useEffect(() => {
     const fetchMovies = () => {
       let apiUrl = '';
 
       if (searchQuery) {
-        // Fetch movies based on the search query
         apiUrl = `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${searchQuery}&language=en-US&page=${currentPage}`;
       } else {
-        // Fetch based on category
         if (selectedCategory === 'Action') {
           apiUrl = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&with_genres=28&language=en-US&page=${currentPage}`;  // Genre ID for Action
         } else if (selectedCategory === 'Drama') {
@@ -39,7 +36,7 @@ const MovieList = ({ selectedCategory, searchQuery, onMovieClick }) => {
       axios.get(apiUrl)
         .then(response => {
           setMovies(response.data.results || []);
-          setHeroMovies(response.data.results.slice(0, 5) || []);  // Display top 5 movies in Hero
+          setHeroMovies(response.data.results.slice(0, 5) || []);  
           setLoading(false);
         })
         .catch(error => {

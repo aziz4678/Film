@@ -7,7 +7,7 @@ const Header = ({ onCategorySelect, onSearch }) => {
 
   const handleSearch = (e) => {
     e.preventDefault();
-    onSearch(searchQuery); // Pass search query to parent component (App.js)
+    onSearch(searchQuery); 
   };
 
   return (
@@ -19,7 +19,7 @@ const Header = ({ onCategorySelect, onSearch }) => {
             <button
               key={index}
               className="hover:text-gray-300"
-              onClick={() => onCategorySelect(category)} // Handle category selection
+              onClick={() => onCategorySelect(category)} 
             >
               {category}
             </button>
