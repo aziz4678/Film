@@ -3,11 +3,11 @@ import React, { useState } from 'react';
 const Header = ({ onCategorySelect, onSearch }) => {
   const [searchQuery, setSearchQuery] = useState('');
 
-  const categories = ['Home', 'Movies', 'Drama', 'Horor', 'TV Movie', 'TV Show'];
+  const categories = ['Home', 'Action', 'Drama', 'Horror', 'Thriller', 'TV Show'];
 
   const handleSearch = (e) => {
     e.preventDefault();
-    onSearch(searchQuery); // Kirimkan query pencarian ke MovieList
+    onSearch(searchQuery); // Pass search query to parent component (App.js)
   };
 
   return (
@@ -19,7 +19,7 @@ const Header = ({ onCategorySelect, onSearch }) => {
             <button
               key={index}
               className="hover:text-gray-300"
-              onClick={() => onCategorySelect(category)} // Kirimkan kategori yang dipilih ke MovieList
+              onClick={() => onCategorySelect(category)} // Handle category selection
             >
               {category}
             </button>
