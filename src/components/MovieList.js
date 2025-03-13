@@ -1,18 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 import { IconButton } from '@mui/material';
 import { ArrowBackIos, ArrowForwardIos } from '@mui/icons-material';
 import Hero from '../pages/hero';
-import MovieDetail from './MovieDetail';
 
-const MovieList = ({ selectedCategory, searchQuery, onMovieClick }) => {
+const MovieList = ({ selectedCategory, searchQuery }) => {
   const [movies, setMovies] = useState([]);
-  const [heroMovies, setHeroMovies] = useState([]); 
+  const [heroMovies, setHeroMovies] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [currentMovies, setCurrentMovies] = useState([]);
-  const [selectedMovie, setSelectedMovie] = useState(null); 
 
   const apiKey = 'aebbe945a2b55aac48b2646bce30b705';
 
@@ -24,13 +23,13 @@ const MovieList = ({ selectedCategory, searchQuery, onMovieClick }) => {
         apiUrl = `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${searchQuery}&language=en-US&page=${currentPage}`;
       } else {
         if (selectedCategory === 'Action') {
-          apiUrl = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&with_genres=28&language=en-US&page=${currentPage}`;  // Genre ID for Action
+          apiUrl = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&with_genres=28&language=en-US&page=${currentPage}`;
         } else if (selectedCategory === 'Drama') {
           apiUrl = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&with_genres=18&language=en-US&page=${currentPage}`;
         } else if (selectedCategory === 'Horror') {
           apiUrl = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&with_genres=27&language=en-US&page=${currentPage}`;
         } else if (selectedCategory === 'Thriller') {
-          apiUrl = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&with_genres=53&language=en-US&page=${currentPage}`;  // Genre ID for Thriller
+          apiUrl = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&with_genres=53&language=en-US&page=${currentPage}`;
         } else if (selectedCategory === 'TV Show') {
           apiUrl = `https://api.themoviedb.org/3/tv/popular?api_key=${apiKey}&language=en-US&page=${currentPage}`;
         } else {
@@ -69,13 +68,8 @@ const MovieList = ({ selectedCategory, searchQuery, onMovieClick }) => {
     }
   };
 
-  const handleMovieClick = (movie) => {
-    setSelectedMovie(movie); 
-  };
-
-  const closeMovieDetail = () => {
-    setSelectedMovie(null); 
-  };
+  const showPrevButton = currentPage > 1;
+  const showNextButton = currentMovies.length === 5 && movies.length > currentPage * 5;
 
   if (loading) {
     return <div>Loading...</div>;
@@ -84,9 +78,6 @@ const MovieList = ({ selectedCategory, searchQuery, onMovieClick }) => {
   if (error) {
     return <div>Error: {error}</div>;
   }
-
-  const showPrevButton = currentPage > 1;
-  const showNextButton = currentMovies.length === 5 && movies.length > currentPage * 5;
 
   return (
     <div className="bg-black">
@@ -99,12 +90,13 @@ const MovieList = ({ selectedCategory, searchQuery, onMovieClick }) => {
         <div className="relative flex justify-start space-x-4">
           {currentMovies.map((movie, index) => (
             <div key={movie.id} className="relative w-60">
-              <img
-                alt={movie.title}
-                className="w-full h-80 object-cover rounded-lg hover:scale-105 transition-all duration-300"
-                src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-                onClick={() => handleMovieClick(movie)} 
-              />
+              <Link to={`/movie/${movie.id}`}>
+                <img
+                  alt={movie.title}
+                  className="w-full h-80 object-cover rounded-lg hover:scale-105 transition-all duration-300"
+                  src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+                />
+              </Link>
               <div className="absolute bottom-2 left-2 text-8xl font-bold text-red-800">
                 {index + 1 + (currentPage - 1) * 5}
               </div>
@@ -146,11 +138,6 @@ const MovieList = ({ selectedCategory, searchQuery, onMovieClick }) => {
           ))}
         </div>
       </div>
-
-      {/* Movie Detail Popup */}
-      {selectedMovie && (
-        <MovieDetail movieId={selectedMovie.id} onClose={closeMovieDetail} />
-      )}
     </div>
   );
 };

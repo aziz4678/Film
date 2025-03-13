@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import MovieList from './components/MovieList';
 import Header from './components/Header';
 import MovieDetail from './components/MovieDetail';
@@ -6,39 +7,39 @@ import MovieDetail from './components/MovieDetail';
 const App = () => {
   const [selectedCategory, setSelectedCategory] = useState('Home');
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedMovie, setSelectedMovie] = useState(null);
 
   const handleCategorySelect = (category) => {
     setSelectedCategory(category);
-    setSelectedMovie(null); 
   };
 
   const handleSearch = (query) => {
     setSearchQuery(query);
   };
 
-  const handleMovieClick = (movieId) => {
-    setSelectedMovie(movieId); 
-  };
-
-  const handleCloseMovieDetail = () => {
-    setSelectedMovie(null);
-  };
-
   return (
-    <div>
-      <Header onCategorySelect={handleCategorySelect} onSearch={handleSearch} />
-      
-      {selectedMovie ? (
-        <MovieDetail movieId={selectedMovie} onClose={handleCloseMovieDetail} />
-      ) : (
-        <MovieList
-          selectedCategory={selectedCategory}
-          searchQuery={searchQuery}
-          onMovieClick={handleMovieClick}
-        />
-      )}
-    </div>
+    <Router>
+      <div>
+        {/* Header */}
+        <Header onCategorySelect={handleCategorySelect} onSearch={handleSearch} />
+
+        {/* Routes */}
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <MovieList
+                selectedCategory={selectedCategory}
+                searchQuery={searchQuery}
+              />
+            }
+          />
+          <Route
+            path="/movie/:id"
+            element={<MovieDetail />}
+          />
+        </Routes>
+      </div>
+    </Router>
   );
 };
 
