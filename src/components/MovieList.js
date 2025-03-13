@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { IconButton } from '@mui/material';
+import { ArrowBackIos, ArrowForwardIos } from '@mui/icons-material';
 import Hero from '../pages/hero';
+import MovieDetail from './MovieDetail';
 
 const MovieList = ({ selectedCategory, searchQuery, onMovieClick }) => {
   const [movies, setMovies] = useState([]);
@@ -8,6 +11,8 @@ const MovieList = ({ selectedCategory, searchQuery, onMovieClick }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [currentMovies, setCurrentMovies] = useState([]);
+  const [selectedMovie, setSelectedMovie] = useState(null); 
 
   const apiKey = 'aebbe945a2b55aac48b2646bce30b705';
 
@@ -36,7 +41,7 @@ const MovieList = ({ selectedCategory, searchQuery, onMovieClick }) => {
       axios.get(apiUrl)
         .then(response => {
           setMovies(response.data.results || []);
-          setHeroMovies(response.data.results.slice(0, 5) || []);  
+          setHeroMovies(response.data.results.slice(0, 5) || []);
           setLoading(false);
         })
         .catch(error => {
@@ -46,10 +51,30 @@ const MovieList = ({ selectedCategory, searchQuery, onMovieClick }) => {
     };
 
     fetchMovies();
-  }, [selectedCategory, searchQuery, currentPage]); 
+  }, [selectedCategory, searchQuery, currentPage]);
 
-  const handlePageChange = (newPage) => {
-    setCurrentPage(newPage);
+  useEffect(() => {
+    const indexOfLastMovie = currentPage * 5;
+    const indexOfFirstMovie = indexOfLastMovie - 5;
+    setCurrentMovies(movies.slice(indexOfFirstMovie, indexOfLastMovie));
+  }, [movies, currentPage]);
+
+  const prevMovie = () => {
+    setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
+  };
+
+  const nextMovie = () => {
+    if (currentMovies.length === 5) {
+      setCurrentPage((prevPage) => prevPage + 1);
+    }
+  };
+
+  const handleMovieClick = (movie) => {
+    setSelectedMovie(movie); 
+  };
+
+  const closeMovieDetail = () => {
+    setSelectedMovie(null); 
   };
 
   if (loading) {
@@ -60,48 +85,72 @@ const MovieList = ({ selectedCategory, searchQuery, onMovieClick }) => {
     return <div>Error: {error}</div>;
   }
 
+  const showPrevButton = currentPage > 1;
+  const showNextButton = currentMovies.length === 5 && movies.length > currentPage * 5;
+
   return (
     <div className="bg-black">
       {/* Hero Section */}
       {heroMovies.length > 0 && <Hero movies={heroMovies} />}
 
       {/* Movie List */}
-      <div className="container mx-auto p-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-        {movies.map((movie) => (
-          <div
-            key={movie.id}
-            className="bg-white rounded-lg shadow-md hover:shadow-xl cursor-pointer"
-            onClick={() => onMovieClick(movie.id)}
-          >
-            <img
-              src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-              alt={movie.title}
-              className="w-full h-64 object-cover rounded-t-lg"
-            />
-            <div className="p-4">
-              <h2 className="text-lg font-semibold">{movie.title}</h2>
-              <p className="text-sm text-gray-600">{movie.release_date}</p>
+      <div className="container mx-auto px-4 py-8">
+        <h1 className="text-xl font-semibold mb-4 text-white">Sedang Tren Sekarang</h1>
+        <div className="relative flex justify-start space-x-4">
+          {currentMovies.map((movie, index) => (
+            <div key={movie.id} className="relative w-60">
+              <img
+                alt={movie.title}
+                className="w-full h-80 object-cover rounded-lg hover:scale-105 transition-all duration-300"
+                src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+                onClick={() => handleMovieClick(movie)} 
+              />
+              <div className="absolute bottom-2 left-2 text-8xl font-bold text-red-800">
+                {index + 1 + (currentPage - 1) * 5}
+              </div>
+
+              {/* Left Navigation Button */}
+              {index === 0 && showPrevButton && (
+                <div className="absolute top-1/2 left-[-40px] transform -translate-y-1/2 z-10">
+                  <IconButton
+                    onClick={prevMovie}
+                    color="primary"
+                    aria-label="previous movie"
+                    style={{
+                      backgroundColor: 'rgba(0, 0, 0, 0.6)',
+                      borderRadius: '50%',
+                    }}
+                  >
+                    <ArrowBackIos style={{ color: 'white' }} />
+                  </IconButton>
+                </div>
+              )}
+
+              {/* Right Navigation Button */}
+              {index === currentMovies.length - 1 && showNextButton && (
+                <div className="absolute top-1/2 right-[-40px] transform -translate-y-1/2 z-10">
+                  <IconButton
+                    onClick={nextMovie}
+                    color="primary"
+                    aria-label="next movie"
+                    style={{
+                      backgroundColor: 'rgba(0, 0, 0, 0.6)',
+                      borderRadius: '50%',
+                    }}
+                  >
+                    <ArrowForwardIos style={{ color: 'white' }} />
+                  </IconButton>
+                </div>
+              )}
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
 
-      {/* Pagination */}
-      <div className="flex justify-between mt-4">
-        <button
-          onClick={() => handlePageChange(currentPage - 1)}
-          className="bg-blue-500 text-white px-4 py-2 rounded-md"
-          disabled={currentPage <= 1}
-        >
-          Previous
-        </button>
-        <button
-          onClick={() => handlePageChange(currentPage + 1)}
-          className="bg-blue-500 text-white px-4 py-2 rounded-md"
-        >
-          Next
-        </button>
-      </div>
+      {/* Movie Detail Popup */}
+      {selectedMovie && (
+        <MovieDetail movieId={selectedMovie.id} onClose={closeMovieDetail} />
+      )}
     </div>
   );
 };

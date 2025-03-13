@@ -58,9 +58,8 @@ const Header = ({ onCategorySelect, onSearch }) => {
               placeholder="Search..."
               className="w-full py-2 pl-4 pr-10 bg-[#282828] text-gray-300 rounded-md focus:outline-none"
             />
-            {/* Search icon from Font Awesome */}
             <div className="absolute inset-y-0 right-0 flex items-center pr-3">
-              <i className="fas fa-search text-gray-300" /> {/* Correct search icon */}
+              <i className="fas fa-search text-gray-300" /> 
             </div>
           </div>
         </div>
