@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { TextField, InputAdornment } from '@mui/material';
-import { Search as SearchIcon, Home as HomeIcon, SportsMartialArts as SportsMartialArtsIcon, Theaters as TheatersIcon, Tv as TvIcon, SentimentDissatisfied as SentimentDissatisfiedIcon, Fingerprint as FingerprintIcon } from '@mui/icons-material';
+import { Home as HomeIcon, SportsMartialArts as SportsMartialArtsIcon, Theaters as TheatersIcon, Tv as TvIcon, SentimentDissatisfied as SentimentDissatisfiedIcon, Fingerprint as FingerprintIcon } from '@mui/icons-material';
 
 const Header = ({ onCategorySelect, onSearch }) => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -13,6 +12,7 @@ const Header = ({ onCategorySelect, onSearch }) => {
     { name: 'Thriller', icon: <FingerprintIcon /> },  
     { name: 'TV Show', icon: <TvIcon /> }
   ];
+
   const handleSearch = (e) => {
     setSearchQuery(e.target.value);
     onSearch(e.target.value);
@@ -49,32 +49,20 @@ const Header = ({ onCategorySelect, onSearch }) => {
           ))}
         </div>
 
-        <div className="flex items-center">
-          <TextField
-            variant="outlined"
-            value={searchQuery}
-            onChange={handleSearch}
-            className="bg-gray-200 text-black"
-            placeholder="Search anything..."
-            size="small"
-            style={{ width: '250px' }}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <SearchIcon className="text-gray-500" />
-                </InputAdornment>
-              ),
-            }}
-            sx={{
-              borderRadius: '50px',
-              '& .MuiOutlinedInput-root': {
-                backgroundColor: '#f2f2f2',
-                '& fieldset': {
-                  border: 'none',
-                },
-              },
-            }}
-          />
+        <div className="relative w-full max-w-xs">
+          <div className="relative">
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={handleSearch}
+              placeholder="Search..."
+              className="w-full py-2 pl-4 pr-10 bg-[#282828] text-gray-300 rounded-md focus:outline-none"
+            />
+            {/* Search icon from Font Awesome */}
+            <div className="absolute inset-y-0 right-0 flex items-center pr-3">
+              <i className="fas fa-search text-gray-300" /> {/* Correct search icon */}
+            </div>
+          </div>
         </div>
       </div>
     </div>
