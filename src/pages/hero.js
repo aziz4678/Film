@@ -41,7 +41,6 @@ const Hero = ({ movies }) => {
               </div>
             </div>
 
-            {/* Navigasi Film */}
             <div className="absolute top-1/2 left-4 transform -translate-y-1/2"> 
               <IconButton
                 onClick={prevMovie}

@@ -19,26 +19,12 @@ const App = () => {
 
   return (
     <Router>
-      <div>
-        {/* Header */}
         <Header onCategorySelect={handleCategorySelect} onSearch={handleSearch} />
-
-        {/* Routes */}
         <Routes>
-          <Route
-            path="/"
-            element={<MovieList selectedCategory={selectedCategory} />}
-          />
-          <Route
-            path="/movie/:id"
-            element={<MovieDetail />}
-          />
-          <Route
-            path="/search"
-            element={<Search searchQuery={searchQuery} />}
-          />
+          <Route path="/" element={<MovieList selectedCategory={selectedCategory} />} />
+          <Route path="/movie/:id" element={<MovieDetail />}/>
+          <Route path="/search" element={<Search searchQuery={searchQuery} />}/>
         </Routes>
-      </div>
     </Router>
   );
 };

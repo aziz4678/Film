@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
+import { FaRegSadCry } from 'react-icons/fa'; // Sad face icon
 
 const Search = ({ searchQuery }) => {
   const [movies, setMovies] = useState([]);
@@ -17,7 +19,7 @@ const Search = ({ searchQuery }) => {
           );
           setMovies(response.data.results);
         } catch (err) {
-          setError('Gagal mengambil data film');
+          setError('Failed to fetch movies');
         } finally {
           setLoading(false);
         }
@@ -28,34 +30,42 @@ const Search = ({ searchQuery }) => {
   }, [searchQuery]);
 
   if (loading) {
-    return <div className="text-white text-center mt-10">Loading...</div>;
+    return (
+      <div className="text-center text-white mt-10">
+        <p className="text-lg font-semibold">Loading...</p>
+      </div>
+    );
   }
 
   if (error) {
-    return <div className="text-white text-center mt-10">{error}</div>;
+    return (
+      <div className="text-center text-white mt-10">
+        <p className="text-lg font-semibold">{error}</p>
+      </div>
+    );
   }
 
   return (
-    <div className="bg-black">
-      <div className="container mx-auto px-4 py-8">
-        <h1 className="text-xl font-semibold mb-4 text-white">Hasil Pencarian</h1>
+    <div className="bg-black min-h-screen py-8">
+      <div className="container mx-auto px-4">
+        <h1 className="text-3xl font-semibold text-white mb-8">Search Results</h1>
         {movies.length === 0 ? (
-          <div className="text-center text-white mt-10">
-            <h2>Tidak ada hasil yang ditemukan</h2>
-            <p>Coba cari dengan kata kunci lain.</p>
+          <div className="text-center text-white mt-16">
+            <FaRegSadCry className="mx-auto text-6xl text-red-500 mb-4" />
+            <h2 className="text-4xl font-semibold">No Results Found</h2>
+            <p className="text-lg mt-4">Try searching with different keywords.</p>
           </div>
         ) : (
-          <div className="flex flex-wrap gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 mt-6">
             {movies.map((movie) => (
-              <div key={movie.id} className="relative w-60">
-                <img
-                  alt={movie.title}
-                  className="w-full h-80 object-cover rounded-lg"
-                  src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-                />
-                <div className="absolute bottom-2 left-2 text-lg font-bold text-red-800">
-                  {movie.title}
-                </div>
+              <div key={movie.id} className="relative w-full">
+                <Link to={`/movie/${movie.id}`}>
+                  <img
+                    alt={movie.title}
+                    className="w-full h-80 object-cover rounded-lg shadow-lg hover:scale-105 transition-all duration-300"
+                    src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+                  />
+                </Link>
               </div>
             ))}
           </div>

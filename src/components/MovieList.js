@@ -76,10 +76,7 @@ const MovieList = ({ selectedCategory }) => {
 
   return (
     <div className="bg-black">
-      {/* Hero Section */}
       {heroMovies.length > 0 && <Hero movies={heroMovies} />}
-
-      {/* Movie List */}
       <div className="container mx-auto px-4 py-8">
         <h1 className="text-xl font-semibold mb-4 text-white">Sedang Tren Sekarang</h1>
         <div className="relative flex justify-start space-x-4">
@@ -96,7 +93,6 @@ const MovieList = ({ selectedCategory }) => {
                 {index + 1 + (currentPage - 1) * 5}
               </div>
 
-              {/* Left Navigation Button */}
               {index === 0 && showPrevButton && (
                 <div className="absolute top-1/2 left-[-40px] transform -translate-y-1/2 z-10">
                   <IconButton
