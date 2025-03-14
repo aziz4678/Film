@@ -78,7 +78,7 @@ const MovieList = ({ selectedCategory }) => {
     <div className="bg-black">
       {heroMovies.length > 0 && <Hero movies={heroMovies} />}
       <div className="container mx-auto px-4 py-8">
-        <h1 className="text-xl font-semibold mb-4 text-white">Sedang Tren Sekarang</h1>
+        <h1 className="text-xl font-semibold mb-4 text-white">Trending Now</h1>
         <div className="relative flex justify-start space-x-4">
           {currentMovies.map((movie, index) => (
             <div key={movie.id} className="relative w-60">
