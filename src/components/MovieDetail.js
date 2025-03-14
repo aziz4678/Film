@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams, Link } from 'react-router-dom';
-import { FaStar, FaRegEye } from 'react-icons/fa'; 
+import { FaStar, FaRegEye } from 'react-icons/fa';
 
 const MovieDetail = () => {
-  const { id } = useParams(); 
+  const { id } = useParams();
   const [movie, setMovie] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -12,60 +12,70 @@ const MovieDetail = () => {
   const apiKey = 'aebbe945a2b55aac48b2646bce30b705';
 
   useEffect(() => {
-    const fetchMovieDetails = () => {
-      const apiUrl = `https://api.themoviedb.org/3/movie/${id}?api_key=${apiKey}&language=en-US`;
-
-      axios.get(apiUrl)
-        .then(response => {
-          setMovie(response.data); 
-          setLoading(false);
-        })
-        .catch(error => {
-          setError('Error fetching movie details');
-          setLoading(false);
-        });
+    const fetchMovieDetails = async () => {
+      try {
+        const response = await axios.get(
+          `https://api.themoviedb.org/3/movie/${id}?api_key=${apiKey}&language=en-US`
+        );
+        setMovie(response.data);
+      } catch (error) {
+        setError('Error fetching movie details');
+      } finally {
+        setLoading(false);
+      }
     };
 
     fetchMovieDetails();
   }, [id]);
 
-  if (loading) {
-    return <div className="text-white">Loading...</div>;
-  }
+  if (loading) return <div className="text-white text-center mt-10">Loading...</div>;
+  if (error) return <div className="text-white text-center mt-10">{error}</div>;
 
-  if (error) {
-    return <div className="text-white">{error}</div>;
-  }
+  const genres = movie.genres && movie.genres.length > 0
+    ? movie.genres.map((genre) => genre.name).join(', ')
+    : 'No Genre Available';
 
-  const genres = movie.genre_ids && Array.isArray(movie.genre_ids) && movie.genre_ids.length > 0
-    ? movie.genre_ids.join(', ')
-    : 'No Genre Available'; 
   const formattedRating = movie.vote_average ? movie.vote_average.toFixed(1) : 'N/A';
 
   return (
-    <div className="bg-black text-white p-6">
-      <div className="max-w-6xl mx-auto">
+    <div
+      className="relative min-h-screen bg-black text-white"
+      style={{
+        backgroundImage: `url(https://image.tmdb.org/t/p/w1280${movie.backdrop_path})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+      }}
+    >
+      {/* Overlay */}
+      <div className="absolute inset-0 bg-black bg-opacity-60"></div>
+
+      <div className="relative z-10 max-w-5xl mx-auto p-6 flex flex-col items-center">
         {/* Back Button */}
-        <button className="bg-blue-500 text-white px-4 py-2 rounded mb-6">
-          <Link to="/" className="text-white">Back to Movie List</Link>
-        </button>
+        <div className="w-full flex justify-start">
+          <Link
+            to="/"
+            className="bg-black bg-opacity-60 text-white font-semibold px-5 py-2 rounded-lg shadow-md hover:bg-opacity-80 transition-all duration-300"
+          >
+            Back to Movie List
+          </Link>
+        </div>
 
-        <div className="flex flex-col md:flex-row items-start">
+
+        {/* Movie Content */}
+        <div className="mt-6 flex flex-col md:flex-row items-center bg-black bg-opacity-80 p-6 rounded-lg shadow-lg w-full">
           {/* Movie Poster */}
-          <div className="flex-shrink-0">
-            <img
-              alt={movie.title}
-              className="w-48 h-72 object-cover rounded-lg shadow-md"
-              src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-            />
-          </div>
+          <img
+            alt={movie.title}
+            className="w-64 h-auto object-cover rounded-lg shadow-md"
+            src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+          />
 
-          <div className="md:ml-6 flex-1">
-            {/* Title and Basic Info */}
+          {/* Movie Details */}
+          <div className="md:ml-6 mt-4 md:mt-0 flex-1">
             <h1 className="text-4xl font-bold mb-2">{movie.title}</h1>
             <p className="text-gray-400 text-lg">{movie.release_date} • {movie.runtime} min</p>
 
-            {/* Rating and Popularity */}
+            {/* Ratings and Popularity */}
             <div className="flex items-center space-x-4 mt-4">
               <div className="flex items-center">
                 <FaStar className="text-yellow-500 mr-2" />
@@ -73,9 +83,10 @@ const MovieDetail = () => {
               </div>
               <div className="flex items-center">
                 <FaRegEye className="text-green-500 mr-2" />
-                <span>{movie.popularity}</span>
+                <span>{movie.popularity}</span> 
               </div>
             </div>
+
 
             {/* Genres */}
             <div className="mt-4">

@@ -5,7 +5,7 @@ import { IconButton } from '@mui/material';
 import { ArrowBackIos, ArrowForwardIos } from '@mui/icons-material';
 import Hero from '../pages/hero';
 
-const MovieList = ({ selectedCategory, searchQuery }) => {
+const MovieList = ({ selectedCategory }) => {
   const [movies, setMovies] = useState([]);
   const [heroMovies, setHeroMovies] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -18,23 +18,18 @@ const MovieList = ({ selectedCategory, searchQuery }) => {
   useEffect(() => {
     const fetchMovies = () => {
       let apiUrl = '';
-
-      if (searchQuery) {
-        apiUrl = `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${searchQuery}&language=en-US&page=${currentPage}`;
+      if (selectedCategory === 'Action') {
+        apiUrl = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&with_genres=28&language=en-US&page=${currentPage}`;
+      } else if (selectedCategory === 'Drama') {
+        apiUrl = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&with_genres=18&language=en-US&page=${currentPage}`;
+      } else if (selectedCategory === 'Horror') {
+        apiUrl = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&with_genres=27&language=en-US&page=${currentPage}`;
+      } else if (selectedCategory === 'Thriller') {
+        apiUrl = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&with_genres=53&language=en-US&page=${currentPage}`;
+      } else if (selectedCategory === 'TV Show') {
+        apiUrl = `https://api.themoviedb.org/3/tv/popular?api_key=${apiKey}&language=en-US&page=${currentPage}`;
       } else {
-        if (selectedCategory === 'Action') {
-          apiUrl = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&with_genres=28&language=en-US&page=${currentPage}`;
-        } else if (selectedCategory === 'Drama') {
-          apiUrl = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&with_genres=18&language=en-US&page=${currentPage}`;
-        } else if (selectedCategory === 'Horror') {
-          apiUrl = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&with_genres=27&language=en-US&page=${currentPage}`;
-        } else if (selectedCategory === 'Thriller') {
-          apiUrl = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&with_genres=53&language=en-US&page=${currentPage}`;
-        } else if (selectedCategory === 'TV Show') {
-          apiUrl = `https://api.themoviedb.org/3/tv/popular?api_key=${apiKey}&language=en-US&page=${currentPage}`;
-        } else {
-          apiUrl = `https://api.themoviedb.org/3/movie/popular?api_key=${apiKey}&language=en-US&page=${currentPage}`;
-        }
+        apiUrl = `https://api.themoviedb.org/3/movie/popular?api_key=${apiKey}&language=en-US&page=${currentPage}`;
       }
 
       axios.get(apiUrl)
@@ -50,7 +45,7 @@ const MovieList = ({ selectedCategory, searchQuery }) => {
     };
 
     fetchMovies();
-  }, [selectedCategory, searchQuery, currentPage]);
+  }, [selectedCategory, currentPage]);
 
   useEffect(() => {
     const indexOfLastMovie = currentPage * 5;

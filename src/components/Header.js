@@ -1,25 +1,34 @@
 import React, { useState } from 'react';
 import { Home as HomeIcon, SportsMartialArts as SportsMartialArtsIcon, Theaters as TheatersIcon, Tv as TvIcon, SentimentDissatisfied as SentimentDissatisfiedIcon, Fingerprint as FingerprintIcon } from '@mui/icons-material';
+import { useNavigate } from 'react-router-dom';
 
 const Header = ({ onCategorySelect, onSearch }) => {
   const [searchQuery, setSearchQuery] = useState('');
+  const navigate = useNavigate();
 
   const categories = [
     { name: 'Home', icon: <HomeIcon /> },
     { name: 'Action', icon: <SportsMartialArtsIcon /> },
     { name: 'Drama', icon: <TheatersIcon /> },
-    { name: 'Horror', icon: <SentimentDissatisfiedIcon /> },  
-    { name: 'Thriller', icon: <FingerprintIcon /> },  
+    { name: 'Horror', icon: <SentimentDissatisfiedIcon /> },
+    { name: 'Thriller', icon: <FingerprintIcon /> },
     { name: 'TV Show', icon: <TvIcon /> }
   ];
 
   const handleSearch = (e) => {
     setSearchQuery(e.target.value);
-    onSearch(e.target.value);
   };
 
-  const handleHomeClick = () => {
-    onCategorySelect('Home');
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    onSearch(searchQuery);
+    navigate('/search');
+  };
+
+  const handleCategoryClick = (category) => {
+    onCategorySelect(category);
+    setSearchQuery(''); 
+    navigate('/'); 
   };
 
   return (
@@ -28,7 +37,7 @@ const Header = ({ onCategorySelect, onSearch }) => {
         <div className="flex items-center">
           <span
             className="font-bold text-lg cursor-pointer"
-            onClick={handleHomeClick}
+            onClick={() => handleCategoryClick('Home')}
             style={{ fontFamily: 'Expletus Sans' }}
           >
             MyFlix
@@ -40,7 +49,7 @@ const Header = ({ onCategorySelect, onSearch }) => {
             <button
               key={index}
               className="font-bold text-white hover:text-red-500 flex items-center space-x-2 px-4 py-2 transition duration-300"
-              onClick={() => onCategorySelect(category.name)}
+              onClick={() => handleCategoryClick(category.name)}
               style={{ fontFamily: 'Poppins, sans-serif' }}
             >
               {category.icon}
@@ -50,18 +59,22 @@ const Header = ({ onCategorySelect, onSearch }) => {
         </div>
 
         <div className="relative w-full max-w-xs">
-          <div className="relative">
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={handleSearch}
-              placeholder="Search..."
-              className="w-full py-2 pl-4 pr-10 bg-[#282828] text-gray-300 rounded-md focus:outline-none"
-            />
-            <div className="absolute inset-y-0 right-0 flex items-center pr-3">
-              <i className="fas fa-search text-gray-300" /> 
+          <form onSubmit={handleSearchSubmit}>
+            <div className="relative">
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={handleSearch}
+                placeholder="Search..."
+                className="w-full py-2 pl-4 pr-10 bg-[#282828] text-gray-300 rounded-md focus:outline-none"
+              />
+              <div className="absolute inset-y-0 right-0 flex items-center pr-3">
+                <button type="submit">
+                  <i className="fas fa-search text-gray-300" />
+                </button>
+              </div>
             </div>
-          </div>
+          </form>
         </div>
       </div>
     </div>

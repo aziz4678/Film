@@ -37,9 +37,7 @@ const Hero = ({ movies }) => {
                   {movie.title}
                 </h1>
                 <p className="text-xl text-gray-300 mb-4">{movie.overview}</p>
-                <button className="bg-red-600 text-white px-6 py-3 rounded-full transform transition-all duration-300 hover:scale-105">
-                  Watch Now
-                </button>
+                
               </div>
             </div>
 
