@@ -13,7 +13,6 @@ const MovieList = ({ selectedCategory }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [currentMovies, setCurrentMovies] = useState([]);
 
   const apiKey = 'aebbe945a2b55aac48b2646bce30b705';
 
@@ -55,20 +54,12 @@ const MovieList = ({ selectedCategory }) => {
     fetchMovies();
   }, [selectedCategory, currentPage]);
 
-  useEffect(() => {
-    const indexOfLastMovie = currentPage * 5;
-    const indexOfFirstMovie = indexOfLastMovie - 5;
-    setCurrentMovies(movies.slice(indexOfFirstMovie, indexOfLastMovie));
-  }, [movies, currentPage]);
-
   const prevMovie = () => {
     setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
   };
 
   const nextMovie = () => {
-    if (currentMovies.length === 5) {
-      setCurrentPage((prevPage) => prevPage + 1);
-    }
+    setCurrentPage((prevPage) => prevPage + 1);
   };
 
   if (loading) {
@@ -82,32 +73,57 @@ const MovieList = ({ selectedCategory }) => {
   return (
     <div className="bg-black">
       {heroMovies.length > 0 && <Hero movies={heroMovies} />}
-      <MovieSection title="Trending Now" movies={currentMovies} prevMovie={prevMovie} nextMovie={nextMovie} />
+      <MovieSection title="Trending Now" movies={movies} />
       <MovieSection title="Upcoming Movies" movies={upcomingMovies} />
       <MovieSection title="Top Rated Movies" movies={topRatedMovies} />
     </div>
   );
 };
 
-const MovieSection = ({ title, movies, prevMovie, nextMovie }) => {
+const MovieSection = ({ title, movies }) => {
+  const [startIndex, setStartIndex] = useState(0);
+  const moviesToShow = movies.slice(startIndex, startIndex + 5);
+
+  const prevMovie = () => {
+    setStartIndex((prevIndex) => Math.max(prevIndex - 1, 0));
+  };
+
+  const nextMovie = () => {
+    if (startIndex + 5 < movies.length) {
+      setStartIndex((prevIndex) => prevIndex + 1);
+    }
+  };
+
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-xl font-semibold mb-4 text-white">{title}</h1>
-      <div className="relative flex justify-start space-x-4">
-        {movies.map((movie, index) => (
-          <div key={movie.id} className="relative w-60">
-            <Link to={`/movie/${movie.id}`}>
-              <img
-                alt={movie.title}
-                className="w-full h-80 object-cover rounded-lg hover:scale-105 transition-all duration-300"
-                src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-              />
-            </Link>
-            <div className="absolute bottom-2 left-2 text-8xl font-bold text-red-800">
-              {index + 1}
+      <div className="relative flex items-center">
+        {startIndex > 0 && (
+          <IconButton onClick={prevMovie} className="absolute left-[-40px] z-10" style={{ backgroundColor: 'rgba(0, 0, 0, 0.6)', borderRadius: '50%' }}>
+            <ArrowBackIos style={{ color: 'white' }} />
+          </IconButton>
+        )}
+        <div className="flex space-x-4 overflow-hidden">
+          {moviesToShow.map((movie, index) => (
+            <div key={movie.id} className="relative w-60">
+              <Link to={`/movie/${movie.id}`}>
+                <img
+                  alt={movie.title}
+                  className="w-full h-80 object-cover rounded-lg hover:scale-105 transition-all duration-300"
+                  src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+                />
+              </Link>
+              <div className="absolute bottom-2 left-2 text-8xl font-bold text-red-800">
+                {startIndex + index + 1}
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
+        {startIndex + 5 < movies.length && (
+          <IconButton onClick={nextMovie} className="absolute right-[-40px] z-10" style={{ backgroundColor: 'rgba(0, 0, 0, 0.6)', borderRadius: '50%' }}>
+            <ArrowForwardIos style={{ color: 'white' }} />
+          </IconButton>
+        )}
       </div>
     </div>
   );
