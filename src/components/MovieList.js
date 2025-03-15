@@ -10,6 +10,8 @@ const MovieList = ({ selectedCategory }) => {
   const [heroMovies, setHeroMovies] = useState([]);
   const [upcomingMovies, setUpcomingMovies] = useState([]);
   const [topRatedMovies, setTopRatedMovies] = useState([]);
+  const [topIndo, setTopIndo] = useState([]);
+  const [latest, setLatest] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
@@ -20,7 +22,7 @@ const MovieList = ({ selectedCategory }) => {
     const fetchMovies = async () => {
       try {
         setLoading(true);
-        let apiUrl = `https://api.themoviedb.org/3/movie/popular?api_key=${apiKey}&language=en-US&page=${currentPage}`;
+        let apiUrl = `https://api.themoviedb.org/3/trending/movie/day?api_key=${apiKey}&language=en-US&page=${currentPage}`;
         
         if (selectedCategory === 'Action') {
           apiUrl = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&with_genres=28&language=en-US&page=${currentPage}`;
@@ -34,16 +36,20 @@ const MovieList = ({ selectedCategory }) => {
           apiUrl = `https://api.themoviedb.org/3/tv/popular?api_key=${apiKey}&language=en-US&page=${currentPage}`;
         }
 
-        const [moviesRes, upcomingRes, topRatedRes] = await Promise.all([
+        const [moviesRes, upcomingRes, topRatedRes, topIndoRes, latestRes] = await Promise.all([
           axios.get(apiUrl),
           axios.get(`https://api.themoviedb.org/3/movie/upcoming?api_key=${apiKey}&language=en-US&page=1`),
-          axios.get(`https://api.themoviedb.org/3/movie/top_rated?api_key=${apiKey}&language=en-US&page=1`)
+          axios.get(`https://api.themoviedb.org/3/movie/top_rated?api_key=${apiKey}&language=en-US&page=1`),
+          axios.get(`https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&language=id-ID&with_original_language=id&page=1&sort_by=popularity.desc`),
+          axios.get(`https://api.themoviedb.org/3/movie/popular?api_key=${apiKey}&language=en-US&page=1`)
         ]);
 
         setMovies(moviesRes.data.results || []);
         setHeroMovies(moviesRes.data.results.slice(0, 5) || []);
-        setUpcomingMovies(upcomingRes.data.results || []);
         setTopRatedMovies(topRatedRes.data.results || []);
+        setTopIndo(topIndoRes.data.results || [])
+        setLatest(latestRes.data.results || []);
+        setUpcomingMovies(upcomingRes.data.results || []);
         setLoading(false);
       } catch (error) {
         setError('Failed to fetch movies');
@@ -54,13 +60,6 @@ const MovieList = ({ selectedCategory }) => {
     fetchMovies();
   }, [selectedCategory, currentPage]);
 
-  const prevMovie = () => {
-    setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
-  };
-
-  const nextMovie = () => {
-    setCurrentPage((prevPage) => prevPage + 1);
-  };
 
   if (loading) {
     return <div>Loading...</div>;
@@ -74,8 +73,10 @@ const MovieList = ({ selectedCategory }) => {
     <div className="bg-black">
       {heroMovies.length > 0 && <Hero movies={heroMovies} />}
       <MovieSection title="Trending Now" movies={movies} />
-      <MovieSection title="Upcoming Movies" movies={upcomingMovies} />
+      <MovieSection title="Popular Movies" movies={latest} />
       <MovieSection title="Top Rated Movies" movies={topRatedMovies} />
+      <MovieSection title="Indonesia" movies={topIndo} />
+      <MovieSection title="Upcoming Movies" movies={upcomingMovies} />
     </div>
   );
 };
