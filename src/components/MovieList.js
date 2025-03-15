@@ -8,6 +8,8 @@ import Hero from '../pages/hero';
 const MovieList = ({ selectedCategory }) => {
   const [movies, setMovies] = useState([]);
   const [heroMovies, setHeroMovies] = useState([]);
+  const [upcomingMovies, setUpcomingMovies] = useState([]);
+  const [topRatedMovies, setTopRatedMovies] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
@@ -16,32 +18,38 @@ const MovieList = ({ selectedCategory }) => {
   const apiKey = 'aebbe945a2b55aac48b2646bce30b705';
 
   useEffect(() => {
-    const fetchMovies = () => {
-      let apiUrl = '';
-      if (selectedCategory === 'Action') {
-        apiUrl = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&with_genres=28&language=en-US&page=${currentPage}`;
-      } else if (selectedCategory === 'Drama') {
-        apiUrl = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&with_genres=18&language=en-US&page=${currentPage}`;
-      } else if (selectedCategory === 'Horror') {
-        apiUrl = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&with_genres=27&language=en-US&page=${currentPage}`;
-      } else if (selectedCategory === 'Thriller') {
-        apiUrl = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&with_genres=53&language=en-US&page=${currentPage}`;
-      } else if (selectedCategory === 'TV Show') {
-        apiUrl = `https://api.themoviedb.org/3/tv/popular?api_key=${apiKey}&language=en-US&page=${currentPage}`;
-      } else {
-        apiUrl = `https://api.themoviedb.org/3/movie/popular?api_key=${apiKey}&language=en-US&page=${currentPage}`;
-      }
+    const fetchMovies = async () => {
+      try {
+        setLoading(true);
+        let apiUrl = `https://api.themoviedb.org/3/movie/popular?api_key=${apiKey}&language=en-US&page=${currentPage}`;
+        
+        if (selectedCategory === 'Action') {
+          apiUrl = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&with_genres=28&language=en-US&page=${currentPage}`;
+        } else if (selectedCategory === 'Drama') {
+          apiUrl = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&with_genres=18&language=en-US&page=${currentPage}`;
+        } else if (selectedCategory === 'Horror') {
+          apiUrl = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&with_genres=27&language=en-US&page=${currentPage}`;
+        } else if (selectedCategory === 'Thriller') {
+          apiUrl = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&with_genres=53&language=en-US&page=${currentPage}`;
+        } else if (selectedCategory === 'TV Show') {
+          apiUrl = `https://api.themoviedb.org/3/tv/popular?api_key=${apiKey}&language=en-US&page=${currentPage}`;
+        }
 
-      axios.get(apiUrl)
-        .then(response => {
-          setMovies(response.data.results || []);
-          setHeroMovies(response.data.results.slice(0, 5) || []);
-          setLoading(false);
-        })
-        .catch(error => {
-          setError('Failed to fetch movies');
-          setLoading(false);
-        });
+        const [moviesRes, upcomingRes, topRatedRes] = await Promise.all([
+          axios.get(apiUrl),
+          axios.get(`https://api.themoviedb.org/3/movie/upcoming?api_key=${apiKey}&language=en-US&page=1`),
+          axios.get(`https://api.themoviedb.org/3/movie/top_rated?api_key=${apiKey}&language=en-US&page=1`)
+        ]);
+
+        setMovies(moviesRes.data.results || []);
+        setHeroMovies(moviesRes.data.results.slice(0, 5) || []);
+        setUpcomingMovies(upcomingRes.data.results || []);
+        setTopRatedMovies(topRatedRes.data.results || []);
+        setLoading(false);
+      } catch (error) {
+        setError('Failed to fetch movies');
+        setLoading(false);
+      }
     };
 
     fetchMovies();
@@ -63,9 +71,6 @@ const MovieList = ({ selectedCategory }) => {
     }
   };
 
-  const showPrevButton = currentPage > 1;
-  const showNextButton = currentMovies.length === 5 && movies.length > currentPage * 5;
-
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -77,57 +82,32 @@ const MovieList = ({ selectedCategory }) => {
   return (
     <div className="bg-black">
       {heroMovies.length > 0 && <Hero movies={heroMovies} />}
-      <div className="container mx-auto px-4 py-8">
-        <h1 className="text-xl font-semibold mb-4 text-white">Trending Now</h1>
-        <div className="relative flex justify-start space-x-4">
-          {currentMovies.map((movie, index) => (
-            <div key={movie.id} className="relative w-60">
-              <Link to={`/movie/${movie.id}`}>
-                <img
-                  alt={movie.title}
-                  className="w-full h-80 object-cover rounded-lg hover:scale-105 transition-all duration-300"
-                  src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-                />
-              </Link>
-              <div className="absolute bottom-2 left-2 text-8xl font-bold text-red-800">
-                {index + 1 + (currentPage - 1) * 5}
-              </div>
+      <MovieSection title="Trending Now" movies={currentMovies} prevMovie={prevMovie} nextMovie={nextMovie} />
+      <MovieSection title="Upcoming Movies" movies={upcomingMovies} />
+      <MovieSection title="Top Rated Movies" movies={topRatedMovies} />
+    </div>
+  );
+};
 
-              {index === 0 && showPrevButton && (
-                <div className="absolute top-1/2 left-[-40px] transform -translate-y-1/2 z-10">
-                  <IconButton
-                    onClick={prevMovie}
-                    color="primary"
-                    aria-label="previous movie"
-                    style={{
-                      backgroundColor: 'rgba(0, 0, 0, 0.6)',
-                      borderRadius: '50%',
-                    }}
-                  >
-                    <ArrowBackIos style={{ color: 'white' }} />
-                  </IconButton>
-                </div>
-              )}
-
-              {/* Right Navigation Button */}
-              {index === currentMovies.length - 1 && showNextButton && (
-                <div className="absolute top-1/2 right-[-40px] transform -translate-y-1/2 z-10">
-                  <IconButton
-                    onClick={nextMovie}
-                    color="primary"
-                    aria-label="next movie"
-                    style={{
-                      backgroundColor: 'rgba(0, 0, 0, 0.6)',
-                      borderRadius: '50%',
-                    }}
-                  >
-                    <ArrowForwardIos style={{ color: 'white' }} />
-                  </IconButton>
-                </div>
-              )}
+const MovieSection = ({ title, movies, prevMovie, nextMovie }) => {
+  return (
+    <div className="container mx-auto px-4 py-8">
+      <h1 className="text-xl font-semibold mb-4 text-white">{title}</h1>
+      <div className="relative flex justify-start space-x-4">
+        {movies.map((movie, index) => (
+          <div key={movie.id} className="relative w-60">
+            <Link to={`/movie/${movie.id}`}>
+              <img
+                alt={movie.title}
+                className="w-full h-80 object-cover rounded-lg hover:scale-105 transition-all duration-300"
+                src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+              />
+            </Link>
+            <div className="absolute bottom-2 left-2 text-8xl font-bold text-red-800">
+              {index + 1}
             </div>
-          ))}
-        </div>
+          </div>
+        ))}
       </div>
     </div>
   );
