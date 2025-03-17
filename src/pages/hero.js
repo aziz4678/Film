@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import { IconButton } from '@mui/material';
-import { ArrowBackIos, ArrowForwardIos } from '@mui/icons-material'; 
+import { ArrowBackIos, ArrowForwardIos } from '@mui/icons-material';
+import { Link } from 'react-router-dom';
 
 const Hero = ({ movies }) => {
-  const [currentHeroIndex, setCurrentHeroIndex] = useState(0);  
-  const movie = movies[currentHeroIndex]; 
+  const [currentHeroIndex, setCurrentHeroIndex] = useState(0);
+  const movie = movies[currentHeroIndex];
 
   const nextMovie = () => {
-    setCurrentHeroIndex((prevIndex) => (prevIndex + 1) % movies.length); 
+    setCurrentHeroIndex((prevIndex) => (prevIndex + 1) % movies.length);
   };
 
   const prevMovie = () => {
@@ -38,10 +39,17 @@ const Hero = ({ movies }) => {
                 </h1>
                 <p className="text-xl text-gray-300 mb-4">{movie.overview}</p>
                 
+                {/* Button to Movie Detail */}
+                <Link
+                  to={`/movie/${movie.id}`}
+                  className="inline-block bg-red-600 hover:bg-red-700 text-white font-semibold px-6 py-3 rounded-lg transition duration-300"
+                >
+                  View Details
+                </Link>
               </div>
             </div>
 
-            <div className="absolute top-1/2 left-4 transform -translate-y-1/2"> 
+            <div className="absolute top-1/2 left-4 transform -translate-y-1/2">
               <IconButton
                 onClick={prevMovie}
                 color="primary"
