@@ -32,8 +32,6 @@ const MovieList = ({ selectedCategory }) => {
           apiUrl = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&with_genres=27&language=en-US&page=${currentPage}`;
         } else if (selectedCategory === 'Thriller') {
           apiUrl = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&with_genres=53&language=en-US&page=${currentPage}`;
-        } else if (selectedCategory === 'TV Show') {
-          apiUrl = `https://api.themoviedb.org/3/tv/popular?api_key=${apiKey}&language=en-US&page=${currentPage}`;
         }
 
         const [moviesRes, upcomingRes, topRatedRes, topIndoRes, latestRes] = await Promise.all([

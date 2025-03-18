@@ -11,8 +11,7 @@ const Header = ({ onCategorySelect, onSearch }) => {
     { name: 'Action', icon: <SportsMartialArtsIcon /> },
     { name: 'Drama', icon: <TheatersIcon /> },
     { name: 'Horror', icon: <SentimentDissatisfiedIcon /> },
-    { name: 'Thriller', icon: <FingerprintIcon /> },
-    { name: 'TV Show', icon: <TvIcon /> }
+    { name: 'Thriller', icon: <FingerprintIcon /> }
   ];
 
   const handleSearch = (e) => {
@@ -32,7 +31,7 @@ const Header = ({ onCategorySelect, onSearch }) => {
   };
 
   return (
-    <div className="bg-black text-white p-4">
+    <div className="bg-black text-red-500 p-4">
       <div className="flex items-center justify-between space-x-8">
         <div className="flex items-center">
           <span
