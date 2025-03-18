@@ -31,8 +31,8 @@ const Search = ({ searchQuery }) => {
 
   if (loading) {
     return (
-      <div className="text-center text-white mt-10">
-        <p className="text-lg font-semibold">Loading...</p>
+      <div className="flex justify-center items-center min-h-screen bg-black">
+        <div className="w-16 h-16 border-4 border-t-transparent border-red-500 rounded-full animate-spin"></div>
       </div>
     );
   }

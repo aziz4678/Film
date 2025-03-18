@@ -45,7 +45,13 @@ const MovieDetail = () => {
     fetchMovieTrailer();
   }, [id]);
 
-  if (loading) return <div className="text-white text-center mt-10">Loading...</div>;
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen bg-black">
+        <div className="w-16 h-16 border-4 border-t-transparent border-red-500 rounded-full animate-spin"></div>
+      </div>
+    );
+  }
   if (error) return <div className="text-white text-center mt-10">{error}</div>;
 
   const genres = movie.genres && movie.genres.length > 0

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Home as HomeIcon, SportsMartialArts as SportsMartialArtsIcon, Theaters as TheatersIcon, Tv as TvIcon, SentimentDissatisfied as SentimentDissatisfiedIcon, Fingerprint as FingerprintIcon } from '@mui/icons-material';
+import { Home as HomeIcon, SportsMartialArts as SportsMartialArtsIcon, Theaters as TheatersIcon, SentimentDissatisfied as SentimentDissatisfiedIcon, Fingerprint as FingerprintIcon } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 
 const Header = ({ onCategorySelect, onSearch }) => {

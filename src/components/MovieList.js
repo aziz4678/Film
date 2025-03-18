@@ -45,7 +45,7 @@ const MovieList = ({ selectedCategory }) => {
         setMovies(moviesRes.data.results || []);
         setHeroMovies(moviesRes.data.results.slice(0, 5) || []);
         setTopRatedMovies(topRatedRes.data.results || []);
-        setTopIndo(topIndoRes.data.results || [])
+        setTopIndo(topIndoRes.data.results || []);
         setLatest(latestRes.data.results || []);
         setUpcomingMovies(upcomingRes.data.results || []);
         setLoading(false);
@@ -58,9 +58,12 @@ const MovieList = ({ selectedCategory }) => {
     fetchMovies();
   }, [selectedCategory, currentPage]);
 
-
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex justify-center items-center min-h-screen bg-black">
+        <div className="w-16 h-16 border-4 border-t-transparent border-red-500 rounded-full animate-spin"></div>
+      </div>
+    );
   }
 
   if (error) {
