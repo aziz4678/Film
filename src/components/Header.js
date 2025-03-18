@@ -44,7 +44,7 @@ const Header = ({ onCategorySelect, onSearch }) => {
   };
 
   return (
-    <div className="bg-black text-red-500 p-4">
+    <div className="bg-black text-red-500 p-4 fixed top-0 left-0 right-0 z-50">
       <div className="flex items-center justify-between space-x-8">
         <div className="flex items-center">
           <span
@@ -69,7 +69,6 @@ const Header = ({ onCategorySelect, onSearch }) => {
             </button>
           ))}
         </div>
-
         <div className="md:hidden flex items-center space-x-4">
           <button onClick={toggleMenu}>
             <MenuIcon className="text-white" />
@@ -77,7 +76,7 @@ const Header = ({ onCategorySelect, onSearch }) => {
         </div>
 
         {isMenuOpen && (
-          <div className="absolute top-16 left-0 right-0 bg-black p-4 flex flex-col space-y-4 md:hidden">
+          <div className="absolute top-16 left-0 right-0 bg-black p-4 flex flex-col space-y-4 md:hidden z-50">
             {categories.map((category, index) => (
               <button
                 key={index}
@@ -98,7 +97,6 @@ const Header = ({ onCategorySelect, onSearch }) => {
             </button>
           </div>
         )}
-
         <div className="relative w-full max-w-xs">
           <form onSubmit={handleSearchSubmit}>
             <div className="relative">

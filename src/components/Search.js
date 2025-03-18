@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-import { FaRegSadCry } from 'react-icons/fa'; // Sad face icon
+import { FaRegSadCry } from 'react-icons/fa'; 
 
 const Search = ({ searchQuery }) => {
   const [movies, setMovies] = useState([]);
@@ -31,8 +31,8 @@ const Search = ({ searchQuery }) => {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center min-h-screen bg-black">
-        <div className="w-16 h-16 border-4 border-t-transparent border-red-500 rounded-full animate-spin"></div>
+      <div className="text-center text-white mt-10">
+        <p className="text-lg font-semibold">Loading...</p>
       </div>
     );
   }
@@ -46,13 +46,13 @@ const Search = ({ searchQuery }) => {
   }
 
   return (
-    <div className="bg-black min-h-screen py-8">
+    <div className="bg-black min-h-screen py-8 mt-11">
       <div className="container mx-auto px-4">
-        <h1 className="text-3xl sm:text-4xl md:text-5xl font-semibold text-white mb-8">Search Results</h1>
+        <h1 className="text-3xl font-semibold text-white mb-8">Search Results</h1>
         {movies.length === 0 ? (
           <div className="text-center text-white mt-16">
             <FaRegSadCry className="mx-auto text-6xl text-red-500 mb-4" />
-            <h2 className="text-4xl sm:text-5xl font-semibold">No Results Found</h2>
+            <h2 className="text-4xl font-semibold">No Results Found</h2>
             <p className="text-lg mt-4">Try searching with different keywords.</p>
           </div>
         ) : (
