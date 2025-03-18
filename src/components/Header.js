@@ -1,9 +1,18 @@
 import React, { useState } from 'react';
-import { Home as HomeIcon, SportsMartialArts as SportsMartialArtsIcon, Theaters as TheatersIcon, SentimentDissatisfied as SentimentDissatisfiedIcon, Fingerprint as FingerprintIcon } from '@mui/icons-material';
+import {
+  Home as HomeIcon,
+  SportsMartialArts as SportsMartialArtsIcon,
+  Theaters as TheatersIcon,
+  SentimentDissatisfied as SentimentDissatisfiedIcon,
+  Fingerprint as FingerprintIcon,
+  Menu as MenuIcon,
+  Close as CloseIcon,
+} from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 
 const Header = ({ onCategorySelect, onSearch }) => {
   const [searchQuery, setSearchQuery] = useState('');
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
 
   const categories = [
@@ -11,7 +20,7 @@ const Header = ({ onCategorySelect, onSearch }) => {
     { name: 'Action', icon: <SportsMartialArtsIcon /> },
     { name: 'Drama', icon: <TheatersIcon /> },
     { name: 'Horror', icon: <SentimentDissatisfiedIcon /> },
-    { name: 'Thriller', icon: <FingerprintIcon /> }
+    { name: 'Thriller', icon: <FingerprintIcon /> },
   ];
 
   const handleSearch = (e) => {
@@ -26,8 +35,12 @@ const Header = ({ onCategorySelect, onSearch }) => {
 
   const handleCategoryClick = (category) => {
     onCategorySelect(category);
-    setSearchQuery(''); 
-    navigate('/'); 
+    setSearchQuery('');
+    navigate('/');
+  };
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
   };
 
   return (
@@ -43,7 +56,7 @@ const Header = ({ onCategorySelect, onSearch }) => {
           </span>
         </div>
 
-        <div className="flex justify-center flex-1 space-x-8">
+        <div className="hidden md:flex justify-center flex-1 space-x-8">
           {categories.map((category, index) => (
             <button
               key={index}
@@ -56,6 +69,35 @@ const Header = ({ onCategorySelect, onSearch }) => {
             </button>
           ))}
         </div>
+
+        <div className="md:hidden flex items-center space-x-4">
+          <button onClick={toggleMenu}>
+            <MenuIcon className="text-white" />
+          </button>
+        </div>
+
+        {isMenuOpen && (
+          <div className="absolute top-16 left-0 right-0 bg-black p-4 flex flex-col space-y-4 md:hidden">
+            {categories.map((category, index) => (
+              <button
+                key={index}
+                className="font-bold text-white hover:text-red-500 flex items-center space-x-2 px-4 py-2 transition duration-300"
+                onClick={() => handleCategoryClick(category.name)}
+                style={{ fontFamily: 'Poppins, sans-serif' }}
+              >
+                {category.icon}
+                <span>{category.name}</span>
+              </button>
+            ))}
+            <button
+              className="text-white font-bold flex items-center space-x-2 px-4 py-2"
+              onClick={toggleMenu}
+            >
+              <CloseIcon />
+              <span>Close</span>
+            </button>
+          </div>
+        )}
 
         <div className="relative w-full max-w-xs">
           <form onSubmit={handleSearchSubmit}>

@@ -48,15 +48,15 @@ const Search = ({ searchQuery }) => {
   return (
     <div className="bg-black min-h-screen py-8">
       <div className="container mx-auto px-4">
-        <h1 className="text-3xl font-semibold text-white mb-8">Search Results</h1>
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-semibold text-white mb-8">Search Results</h1>
         {movies.length === 0 ? (
           <div className="text-center text-white mt-16">
             <FaRegSadCry className="mx-auto text-6xl text-red-500 mb-4" />
-            <h2 className="text-4xl font-semibold">No Results Found</h2>
+            <h2 className="text-4xl sm:text-5xl font-semibold">No Results Found</h2>
             <p className="text-lg mt-4">Try searching with different keywords.</p>
           </div>
         ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 mt-6">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6 mt-6">
             {movies.map((movie) => (
               <div key={movie.id} className="relative w-full">
                 <Link to={`/movie/${movie.id}`}>

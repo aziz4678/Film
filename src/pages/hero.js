@@ -33,12 +33,10 @@ const Hero = ({ movies }) => {
           <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-transparent to-transparent opacity-60"></div>
           <div className="relative z-20 flex items-center justify-center h-full px-4">
             <div className="flex w-full max-w-6xl">
-              <div className="w-1/2 p-8">
-                <h1 className="text-5xl font-extrabold text-white mb-4">
-                  {movie.title}
-                </h1>
-                <p className="text-xl text-gray-300 mb-4">{movie.overview}</p>
-                
+              <div className="w-full sm:w-1/2 p-4 sm:p-8">
+                <h1 className="text-3xl sm:text-5xl font-extrabold text-white mb-4">{movie.title}</h1>
+                <p className="text-sm sm:text-xl text-gray-300 mb-4">{movie.overview}</p>
+
                 {/* Button to Movie Detail */}
                 <Link
                   to={`/movie/${movie.id}`}

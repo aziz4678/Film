@@ -101,13 +101,17 @@ const MovieSection = ({ title, movies }) => {
       <h1 className="text-xl font-semibold mb-4 text-white">{title}</h1>
       <div className="relative flex items-center">
         {startIndex > 0 && (
-          <IconButton onClick={prevMovie} className="absolute left-[-40px] z-10" style={{ backgroundColor: 'rgba(0, 0, 0, 0.6)', borderRadius: '50%' }}>
+          <IconButton 
+            onClick={prevMovie} 
+            className="absolute left-[-40px] z-10 md:block hidden" 
+            style={{ backgroundColor: 'rgba(0, 0, 0, 0.6)', borderRadius: '50%' }}
+          >
             <ArrowBackIos style={{ color: 'white' }} />
           </IconButton>
         )}
-        <div className="flex space-x-4 overflow-hidden">
+        <div className="flex space-x-4 overflow-hidden w-full justify-center sm:justify-start">
           {moviesToShow.map((movie, index) => (
-            <div key={movie.id} className="relative w-60">
+            <div key={movie.id} className="relative w-60 sm:w-64 md:w-72 lg:w-80">
               <Link to={`/movie/${movie.id}`}>
                 <img
                   alt={movie.title}
@@ -122,7 +126,11 @@ const MovieSection = ({ title, movies }) => {
           ))}
         </div>
         {startIndex + 5 < movies.length && (
-          <IconButton onClick={nextMovie} className="absolute right-[-40px] z-10" style={{ backgroundColor: 'rgba(0, 0, 0, 0.6)', borderRadius: '50%' }}>
+          <IconButton 
+            onClick={nextMovie} 
+            className="absolute right-[-40px] z-10 md:block hidden"
+            style={{ backgroundColor: 'rgba(0, 0, 0, 0.6)', borderRadius: '50%' }}
+          >
             <ArrowForwardIos style={{ color: 'white' }} />
           </IconButton>
         )}
