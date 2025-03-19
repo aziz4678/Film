@@ -1,40 +1,33 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { Link } from 'react-router-dom';
-import { FaRegSadCry } from 'react-icons/fa'; 
-
+import React, { useState, useEffect } from 'react'
+import { FaRegSadCry } from 'react-icons/fa'
+import { searchMovies } from '../utils/api'
+import { Link } from 'react-router-dom'
 const Search = ({ searchQuery }) => {
-  const [movies, setMovies] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  const apiKey = 'aebbe945a2b55aac48b2646bce30b705';
+  const [movies, setMovies] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
 
   useEffect(() => {
     const fetchMovies = async () => {
-      if (searchQuery) {
-        try {
-          const response = await axios.get(
-            `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${searchQuery}&language=en-US`
-          );
-          setMovies(response.data.results);
-        } catch (err) {
-          setError('Failed to fetch movies');
-        } finally {
-          setLoading(false);
-        }
+      try {
+        const searchResults = await searchMovies(searchQuery)
+        setMovies(searchResults)
+        setLoading(false)
+      } catch (err) {
+        setError('Failed to fetch movies')
+        setLoading(false)
       }
-    };
+    }
 
-    fetchMovies();
-  }, [searchQuery]);
+    fetchMovies()
+  }, [searchQuery])
 
   if (loading) {
     return (
-      <div className="text-center text-white mt-10">
-        <p className="text-lg font-semibold">Loading...</p>
+      <div className="flex justify-center items-center min-h-screen bg-black">
+        <div className="w-16 h-16 border-4 border-t-transparent border-red-500 rounded-full animate-spin"></div>
       </div>
-    );
+    )
   }
 
   if (error) {
@@ -42,13 +35,13 @@ const Search = ({ searchQuery }) => {
       <div className="text-center text-white mt-10">
         <p className="text-lg font-semibold">{error}</p>
       </div>
-    );
+    )
   }
 
   return (
     <div className="bg-black min-h-screen py-8">
       <div className="container mx-auto px-4">
-        <h1 className="text-3xl font-semibold text-white mb-8">Search Results</h1>
+        <h1 className="text-3xl font-semibold text-white mb-8"> Search Results for "{searchQuery}" </h1>
         {movies.length === 0 ? (
           <div className="text-center text-white mt-16">
             <FaRegSadCry className="mx-auto text-6xl text-red-500 mb-4" />
@@ -72,7 +65,7 @@ const Search = ({ searchQuery }) => {
         )}
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Search;
+export default Search

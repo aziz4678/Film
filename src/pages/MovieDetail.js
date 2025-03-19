@@ -1,64 +1,50 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { useParams, Link } from 'react-router-dom';
-import { FaStar, FaRegEye } from 'react-icons/fa';
-import ReactPlayer from 'react-player';
+import React, { useState, useEffect } from 'react'
+import { useParams, Link } from 'react-router-dom'
+import { FaStar, FaRegEye } from 'react-icons/fa'
+import ReactPlayer from 'react-player'
+import { fetchMovieDetails, fetchMovieTrailer } from '../utils/api'
 
 const MovieDetail = () => {
-  const { id } = useParams();
-  const [movie, setMovie] = useState(null);
-  const [trailer, setTrailer] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  const apiKey = 'aebbe945a2b55aac48b2646bce30b705';
+  const { id } = useParams()
+  const [movie, setMovie] = useState(null)
+  const [trailer, setTrailer] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
 
   useEffect(() => {
-    const fetchMovieDetails = async () => {
+    const fetchDetails = async () => {
       try {
-        const response = await axios.get(
-          `https://api.themoviedb.org/3/movie/${id}?api_key=${apiKey}&language=en-US`
-        );
-        setMovie(response.data);
-      } catch (error) {
-        setError('Error fetching movie details');
+        const movieDetails = await fetchMovieDetails(id)
+        const movieTrailer = await fetchMovieTrailer(id)
+        setMovie(movieDetails)
+        setTrailer(movieTrailer)
+      } catch (err) {
+        setError('Error fetching movie details')
       } finally {
-        setLoading(false);
+        setLoading(false)
       }
-    };
+    }
 
-    const fetchMovieTrailer = async () => {
-      try {
-        const trailerResponse = await axios.get(
-          `https://api.themoviedb.org/3/movie/${id}/videos?api_key=${apiKey}&language=en-US`
-        );
-        const trailerKey = trailerResponse.data.results.find(
-          (video) => video.type === 'Trailer'
-        );
-        setTrailer(trailerKey ? trailerKey.key : null);
-      } catch (error) {
-        console.error('Error fetching trailer', error);
-      }
-    };
-
-    fetchMovieDetails();
-    fetchMovieTrailer();
-  }, [id]);
+    fetchDetails()
+  }, [id])
 
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen bg-black">
         <div className="w-16 h-16 border-4 border-t-transparent border-red-500 rounded-full animate-spin"></div>
       </div>
-    );
+    )
   }
-  if (error) return <div className="text-white text-center mt-10">{error}</div>;
+
+  if (error) {
+    return <div className="text-white text-center mt-10">{error}</div>
+  }
 
   const genres = movie.genres && movie.genres.length > 0
     ? movie.genres.map((genre) => genre.name).join(', ')
-    : 'No Genre Available';
+    : 'No Genre Available'
 
-  const formattedRating = movie.vote_average ? movie.vote_average.toFixed(1) : 'N/A';
+  const formattedRating = movie.vote_average ? movie.vote_average.toFixed(1) : 'N/A'
 
   return (
     <div
@@ -129,7 +115,7 @@ const MovieDetail = () => {
         )}
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default MovieDetail;
+export default MovieDetail

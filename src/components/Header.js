@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from 'react'
 import {
   Home as HomeIcon,
   SportsMartialArts as SportsMartialArtsIcon,
@@ -7,13 +7,13 @@ import {
   Fingerprint as FingerprintIcon,
   Menu as MenuIcon,
   Close as CloseIcon,
-} from '@mui/icons-material';
-import { useNavigate } from 'react-router-dom';
+} from '@mui/icons-material'
+import { useNavigate } from 'react-router-dom'
 
 const Header = ({ onCategorySelect, onSearch }) => {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const navigate = useNavigate();
+  const [searchQuery, setSearchQuery] = useState('')
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const navigate = useNavigate()
 
   const categories = [
     { name: 'Home', icon: <HomeIcon /> },
@@ -21,27 +21,27 @@ const Header = ({ onCategorySelect, onSearch }) => {
     { name: 'Drama', icon: <TheatersIcon /> },
     { name: 'Horror', icon: <SentimentDissatisfiedIcon /> },
     { name: 'Thriller', icon: <FingerprintIcon /> },
-  ];
+  ]
 
   const handleSearch = (e) => {
-    setSearchQuery(e.target.value);
-  };
+    setSearchQuery(e.target.value)
+  }
 
   const handleSearchSubmit = (e) => {
-    e.preventDefault();
-    onSearch(searchQuery);
-    navigate('/search');
-  };
+    e.preventDefault()
+    onSearch(searchQuery)
+    navigate('/search')
+  }
 
   const handleCategoryClick = (category) => {
-    onCategorySelect(category);
-    setSearchQuery('');
-    navigate('/');
-  };
+    onCategorySelect(category)
+    setSearchQuery('')
+    navigate('/')
+  }
 
   const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-  };
+    setIsMenuOpen(!isMenuOpen)
+  }
 
   return (
     <div className="bg-black text-red-500 p-4 fixed top-0 left-0 right-0 z-50">
@@ -117,7 +117,7 @@ const Header = ({ onCategorySelect, onSearch }) => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Header;
+export default Header

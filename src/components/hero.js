@@ -1,19 +1,19 @@
-import React, { useState } from 'react';
-import { IconButton } from '@mui/material';
-import { ArrowBackIos, ArrowForwardIos } from '@mui/icons-material';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react'
+import { IconButton } from '@mui/material'
+import { ArrowBackIos, ArrowForwardIos } from '@mui/icons-material'
+import { Link } from 'react-router-dom'
 
 const Hero = ({ movies }) => {
-  const [currentHeroIndex, setCurrentHeroIndex] = useState(0);
-  const movie = movies[currentHeroIndex];
+  const [currentHeroIndex, setCurrentHeroIndex] = useState(0)
+  const movie = movies[currentHeroIndex]
 
   const nextMovie = () => {
-    setCurrentHeroIndex((prevIndex) => (prevIndex + 1) % movies.length);
-  };
+    setCurrentHeroIndex((prevIndex) => (prevIndex + 1) % movies.length)
+  }
 
   const prevMovie = () => {
-    setCurrentHeroIndex((prevIndex) => (prevIndex - 1 + movies.length) % movies.length);
-  };
+    setCurrentHeroIndex((prevIndex) => (prevIndex - 1 + movies.length) % movies.length)
+  }
 
   return (
     <div className="relative w-full h-screen">
@@ -36,8 +36,6 @@ const Hero = ({ movies }) => {
               <div className="w-full sm:w-1/2 p-4 sm:p-8">
                 <h1 className="text-3xl sm:text-5xl font-extrabold text-white mb-4">{movie.title}</h1>
                 <p className="text-sm sm:text-xl text-gray-300 mb-4">{movie.overview}</p>
-
-                {/* Button to Movie Detail */}
                 <Link
                   to={`/movie/${movie.id}`}
                   className="inline-block bg-red-600 hover:bg-red-700 text-white font-semibold px-6 py-3 rounded-lg transition duration-300"
@@ -77,7 +75,7 @@ const Hero = ({ movies }) => {
         </>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default Hero;
+export default Hero
