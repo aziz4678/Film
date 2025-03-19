@@ -62,7 +62,7 @@ const MovieDetail = () => {
 
   return (
     <div
-      className="relative min-h-screen bg-black text-white mt-11"
+      className="relative min-h-screen bg-black text-white"
       style={{
         backgroundImage: `url(https://image.tmdb.org/t/p/w1280${movie.backdrop_path})`,
         backgroundSize: 'cover',

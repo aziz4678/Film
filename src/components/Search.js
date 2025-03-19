@@ -46,7 +46,7 @@ const Search = ({ searchQuery }) => {
   }
 
   return (
-    <div className="bg-black min-h-screen py-8 mt-11">
+    <div className="bg-black min-h-screen py-8">
       <div className="container mx-auto px-4">
         <h1 className="text-3xl font-semibold text-white mb-8">Search Results</h1>
         {movies.length === 0 ? (

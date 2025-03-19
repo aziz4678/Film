@@ -20,11 +20,13 @@ const App = () => {
   return (
     <Router>
         <Header onCategorySelect={handleCategorySelect} onSearch={handleSearch} />
+        <div className="mt-16">
         <Routes>
           <Route path="/" element={<MovieList selectedCategory={selectedCategory} />} />
           <Route path="/movie/:id" element={<MovieDetail />}/>
           <Route path="/search" element={<Search searchQuery={searchQuery} />}/>
         </Routes>
+        </div>
     </Router>
   );
 };
